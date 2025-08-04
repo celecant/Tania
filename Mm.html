@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Que loco que caiga</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background-image: url('https://images.pexels.com/photos/15903623/pexels-photo-15903623.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1, p {
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    font-weight: bold;
+    font-size: 2rem;
+  }
+
+  #player {
+    width: 320px;
+    height: 180px;
+    margin-top: 20px;
+    display: none;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 10px;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.5rem; }
+    p { font-size: 1rem; }
+    button { font-size: 1rem; padding: 8px 16px; }
+  }
+</style>
+</head>
+<body>
+<div>
+  <h1>No quiero esperarte otros 27 años</h1>
+  <p>Pero si es necesario lo haría.</p>
+  <button id="playBtn" disabled>▶️ Play música</button>
+  <div id="player"></div>
+</div>
+
+<script>
+  const tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.body.appendChild(tag);
+
+  let player, playing = false;
+  const btn = document.getElementById('playBtn');
+  const playerDiv = document.getElementById('player');
+
+  window.onYouTubeIframeAPIReady = () => {
+    player = new YT.Player('player', {
+      height: '180', width: '320',
+      videoId: '0MLiOmqrx5g', // Nueva canción
+      playerVars: { autoplay: 0, controls: 1, modestbranding: 1, rel: 0 },
+      events: {
+        onReady: () => { btn.disabled = false; },
+        onStateChange: event => {
+          if (event.data === YT.PlayerState.ENDED) {
+            btn.textContent = "▶️ Play música";
+            playing = false;
+          }
+        }
+      }
+    });
+  };
+
+  btn.addEventListener('click', () => {
+    if (!playing) {
+      playerDiv.style.display = 'block';
+      player.playVideo();
+      btn.textContent = "⏸️ Pausar música";
+    } else {
+      player.pauseVideo();
+      btn.textContent = "▶️ Play música";
+    }
+    playing = !playing;
+  });
+</script>
+</body>
+</html>
